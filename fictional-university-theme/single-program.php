@@ -29,6 +29,34 @@
         <hr class="section-break">
         
         <?php 
+        // Related Professors
+          $relatedProfessors = new WP_Query(array(
+            'post_type' => 'professor',
+            'posts_per_page' => -1,
+            'order' => 'ASC',
+            'orderby' => 'title',
+            'meta_query'=> array(
+              array(
+                'key'=> 'related_programs',
+                'compare'=>'LIKE',
+                'value'=> '"' . get_the_ID() . '"'
+              )
+            )
+          ));
+          if($relatedProfessors -> have_posts()){
+              echo '<h2 class="headline headline--medium">' . get_the_title() .' Professors</h2>';
+              while($relatedProfessors -> have_posts()){
+                $relatedProfessors -> the_post(); ?>
+    
+                <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
+    
+              <?php }
+          }
+          wp_reset_postdata();
+          
+          echo ' <hr class="section-break">';
+
+          // Related Events
           $today = date("Ymd");
           $homepageEvents = new WP_Query(array(
             'post_type' => 'event',
